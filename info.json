@@ -1,0 +1,8 @@
+{
+	"name": "ally-biters",
+	"version": "0.0.1",
+	"title": "Ally Biters",
+	"author": "@been-jamming github",
+	"factorio_version": "2.0",
+	"dependencies": ["base", "space-age"]
+}
