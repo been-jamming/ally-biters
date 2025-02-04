@@ -26,24 +26,27 @@ local function command_biters(event)
 	local commandable = nil
 	local player = game.get_player(event.player_index)
 
-	if previous_flare and previous_flare.valid then
-		previous_flare.destroy()
-	end
-	previous_flare = player.surface.create_entity{name = "artillery-flare", position = event.cursor_position, force = player.force, movement = {0, 0}, height = 0, vertical_speed = 0, frame_speed = 1}
+	if player.cursor_stack and player.cursor_stack.valid_for_read and player.cursor_stack.name == "ally-biters-ally-remote" then
 
-	if tracked_units then
-		for _, entity in pairs(tracked_units) do
-			if entity.valid and entity.commandable and entity.force == player.force and entity.type == "unit" then
-				if not commandable then
-					commandable = player.surface.create_unit_group{position = entity.position, force = player.force}
+		if previous_flare and previous_flare.valid then
+			previous_flare.destroy()
+		end
+		previous_flare = player.surface.create_entity{name = "artillery-flare", position = event.cursor_position, force = player.force, movement = {0, 0}, height = 0, vertical_speed = 0, frame_speed = 1}
+
+		if tracked_units then
+			for _, entity in pairs(tracked_units) do
+				if entity.valid and entity.commandable and entity.force == player.force and entity.type == "unit" then
+					if not commandable then
+						commandable = player.surface.create_unit_group{position = entity.position, force = player.force}
+					end
+					commandable.add_member(entity)
 				end
-				commandable.add_member(entity)
 			end
 		end
-	end
 
-	if commandable then
-		commandable.set_command({type = defines.command.go_to_location, destination = event.cursor_position})
+		if commandable then
+			commandable.set_command({type = defines.command.go_to_location, destination = event.cursor_position})
+		end
 	end
 end
 
